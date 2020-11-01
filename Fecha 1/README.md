@@ -84,6 +84,6 @@ Contar las inversiones de cada elemento, para poder hacerlo en O(nlogn) usar Seg
 Verlo como un grafo ponderado, el costo de cada arista es la suma de sus dos vértices.
 Hacer árbol de expansión mínima, si aún queda posibilidad de agregar más aristas, irlas poniendo de menor a mayor mientras se pueda.
 
-## F: (dio WA)
+## F: (no acabamos de implementarlo)
 
 Comprobar si los platillos son suficientes para satisfacer las peticiones mínimas de casa juez y el total de platos a pedir. Calcular una permutación parcial. Si esto es posible elegir la cantidad de platillos faltantes desde los que no se sirvieron (Elegir k elementos de entre n conjuntos finitos distintos), no alcanzamos a generar fórmula/algoritmo que lo calculara a tiempo.
