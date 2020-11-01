@@ -4,6 +4,6 @@ Este repositorio contiene el código fuente de las soluciones a los problemas de
 
 ## Miembros
 
-* Yuguel Salazar (@CFOP2357)
+* Yoguel Salazar (@CFOP2357)
 * Bernardo Hernandez (@Bhdzhdz)
 * Luis Eduardo Garza (@kingarza)
