@@ -1,19 +1,19 @@
 # Fecha 1 \#GranPremioMX2020
 
-## H:
+## H
 
-*tags: dp, fuerza bruta, greedy*
+*dp, fuerza bruta, greedy*
 
 dp en tiempo O(n)
 
-## G:
+## G
 
 *Diccionario*
 
 Crear un diccionario que mapea los términos a la cantidad de golpes por encima o por debajo del *par* que necesito el golfista, sumar el par mas el valor del termino obtenido para cada hoyo. Si es el caso *hole in one* no sumar el valor del par del hoyo, sumar unicamente uno (1).
 
-## E:
-*tags: fuerza bruta, teoria de numeros*
+## E
+*fuerza bruta, teoria de numeros*
 
 Probar todas las posibilidades. Sea $n$ el tamaño de la cadena.
 * Generamos todas las permutaciones de la cadena, esto es O(n!).
@@ -21,14 +21,14 @@ Probar todas las posibilidades. Sea $n$ el tamaño de la cadena.
 * Para cada uno de estos tres números comprobamos que es primo, siendo el posible primo un número k basta con una prueba de primalidad O(sqrt(k)).
 * Si todos los numeros son primos actualizar si el producto es menor a la respuesta que se tiene hasta el momento.
 
-## D:
+## D
 
-*tags: data structures, search and sorting*
+*data structures, search and sorting*
 
 Contar cuántos elementos tienen elementos más grandes a su derecha, tener guardado en un multiset los elementos que están a la derecha, conforme se va iterando irlos eliminando del multiset, cuando se encuentra un elemento que se va a mover, entonces este se va hacia la derecha (no lo eliminan del multiset)
 
 ## I:
-*tags: strings, lenguaje*
+*strings, lenguaje*
 
 Para las reglas 1, 2 y la primera parte de la 3 (tener al menos un digito) para cada caracter revisamos que se encuentren en los intervalos de caracteres ascii ['a', 'b'], ['A', 'B'] y ['0', '9'] respectivamente
 
@@ -50,7 +50,7 @@ Para este problema es recomendable usar un contenedor especializado en el manejo
 
 ## A:
 
-*tags: implementation, search and sorting*
+*implementation, search and sorting*
 
 Crear un arreglo de set con prioridad de mayor en donde se guarde para cada i, todas sus j con todas las preferencias (para Q)
 
@@ -71,7 +71,7 @@ Tener un mapa en donde la llave sea un par, para cada conjunto  {i, j} se va gua
   Lo mismo que con Q pero en el arreglo de todo
 
 ## C:
-*tags: data structures, graph*
+*data structures, graph*
 
 Verlo como un grafo, una arista conecta dos palabras. Encontrar las componentes conexas con Union Find en un mapa de {string, string}, poner como raíz de cada componente la palabra más chica, al final solo imprimir la raíz de la componente a la que pertenece cada palabra que se quiere buscar.
 
