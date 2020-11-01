@@ -1,3 +1,5 @@
+// Incompleto, solo funciona la lectura de datos
+
 #include <iostream>
 #include <climits>
 #include <vector>
