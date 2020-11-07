@@ -66,7 +66,7 @@ int main(){
     int a, b;
     cin>>a>>b;
     if(b < a) swap(a, b);
-    aristas.push_back({a+b,{a,b}});
+    aristas.push_back({0,{a,b}});
     //l.push(aristas.back());
   }
   //cout << "Input\n";
