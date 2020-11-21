@@ -36,57 +36,73 @@ typedef vector<ull> vi;
 
 set<ull> children[MAX];
 multiset<pii> party[MAX];
-ull ans[MAX];
 int P[MAX];
 int A[MAX];
 int N, M;
 
 bool visited[MAX];
+vector<ull> pt[MAX]; //fiestas en el que el nodo v es el mas grande
 
-//children, party
-void dfs(int v, int p){
+vector<pii> last; //edad, id
+void dfs(int v){
+    last.push_back({A[v], v});
 
-    if(visited[v])
-      return;
-    visited[v] = true;
-
-    children[v].insert(v);
-
-    //cout << v<<"$\n";
-
-    for(int u : children[v]){
-        if(u==p || u==v)
-          continue;
-
-        dfs(u, v);
-
-        for(auto child : children[u])
-          children[v].insert(child);
-        for(auto part : party[u])
-          party[v].insert(part);
+    //10 9 7 6 5 4
+    for (auto p : party[v]){ // p = {r, l}
+      int pos = lower_bound(last.begin(), last.end(), make_pair(p.first, LLONG_MAX), greater<pii>())->second;
+      //cout<<pos;
+      pt[pos].push_back(p.second);
     }
 
-
-    //cout << "party_size: " << party[v].size() << '\n';
-    while(party[v].size() && (party[v].begin()->first < A[p] || v == 1)){
-      //cout << "l " << party[v].begin()->second << ' ';
-      //cout << " r " << party[v].begin()->first << '\n';
-      for(int child : children[v]){
-        if(A[child] >= party[v].begin()->second) ans[child]++;
-      }
-
-      party[v].erase(party[v].find(*party[v].begin()));
+    for(auto u : children[v]){
+      if(u!=v)
+        dfs(u);
     }
 
-    for(int u : children[v]){
-      if(u != v){
-        children[u].clear();
-        party[u].clear();
-
-    }
-    }
-
+    last.pop_back();
 }
+
+struct Tree {
+	typedef ull T;
+	static constexpr T unit = 0;
+	T f(T a, T b) { return a+b; } // (any associative fn)
+	vector<T> s; int n;
+	Tree(int n = 0, T def = unit) : s(2*n, def), n(n) {}
+	void update(int pos, T val) {
+		for (s[pos += n] = val; pos /= 2;)
+			s[pos] = f(s[pos * 2], s[pos * 2 + 1]);
+	}
+	T query(int b, int e) { // query [b, e)
+		T ra = unit, rb = unit;
+		for (b += n, e += n; b < e; b /= 2, e /= 2) {
+			if (b % 2) ra = f(ra, s[b++]);
+			if (e % 2) rb = f(s[--e], rb);
+		}
+		return f(ra, rb);
+	}
+};
+
+Tree seg(MAX);
+ull ans[MAX];
+void dfs2(int v){
+  for(int fiesta : pt[v])
+    seg.update(fiesta, seg.query(fiesta, fiesta+1)+1); //[v, v+1)
+
+  /*for(int fiesta : pt[v])
+    cout<<fiesta<<" ";
+  cout<<"\n";*/
+
+  ans[v] = seg.query(0, A[v]+1); //[)
+
+  for(auto c : children[v]){
+    if(c == v) continue;
+    dfs2(c);
+  }
+
+  for(int fiesta : pt[v])
+    seg.update(fiesta, seg.query(fiesta, fiesta+1)-1);
+}
+
 
 void solve(){
     cin>>N>>M;
@@ -101,7 +117,8 @@ void solve(){
     }
 
 
-    dfs(1, 0);
+    dfs(1);
+    dfs2(1);
 
     for(int i=1; i<N; i++)
       cout<<ans[i]<<" ";
