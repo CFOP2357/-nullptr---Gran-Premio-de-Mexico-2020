@@ -1,209 +1,162 @@
-#include <iostream>
-#include <climits>
-#include <vector>
-#include <algorithm>
-#include <cmath>
-
-#include <map>
-#include <set>
-
-#include <stack>
-#include <queue>
-
-#include <unordered_map>
-#include <unordered_set>
-
+#include<bits/stdc++.h>
+#define MAX 45
 using namespace std;
 
-/*
-#include <ext/pb_ds/assoc_container.hpp>
-using namespace __gnu_pbds;
-typedef tree<ull,null_type,less<ull>,rb_tree_tag, tree_order_statistics_node_update> orderedSet;
-typedef tree<ull,null_type,less_equal<ull>,rb_tree_tag, tree_order_statistics_node_update> orderedMultiSet;
+int N, M, Q;
+char mapa[MAX][MAX];
 
-#define findBO find_by_order
-#define findBK order_of_key
-*/
-
-#define all(a) a.begin(), a.end()
-
-typedef long long ull;
-typedef pair<ull, ull> pii;
-typedef vector<ull> vi;
-
-#define MAX 100
-#define MOD 1000000007
-
-ull L, C, N;
-char grid[MAX][MAX];
-set<int> t[MAX][MAX];
-vector<string> w;
-
-bool mapEqual(map<char, int> &a, map<char, int> &b){
-
-    if(a.size() != b.size())
-        return false;
-
-    for(auto el : b){
-        if(a[el.first]!=el.second)
-            return false;
-    }
-
-    return true;
-
-
-}
-
-void solve(){
-    cin>>L>>C;
-
-    for(int i=0; i<L; i++)
-        for(int j=0; j<C; j++){
-            cin>>grid[i][j];
-            t[i][j].clear();
-        }
-
-    cin>>N;
-    for(int i=0; i<N; i++){
-        string s; cin>>s;
-        w.push_back(s);
-    }
-
-
-    int iS = 0;
-    for(string s : w){
-
-        map<char, int> times_char; times_char.clear();
-        for(char c : s)
-            times_char[c]++;
-
-        for(int i=0; i<L; i++)
-            for(int j=0; j<C; j++){
-
-                map<char, int> actual;
-
-                actual.clear();
-                if(s.size()+i<=L){ //012
-                    for(int k = 0; k<s.size(); k++)
-                        actual[grid[i+k][j]]++;
-                    if(mapEqual(actual, times_char))
-                        for(int k = 0; k<s.size(); k++)
-                            t[i+k][j].insert(iS);
-                }
-
-                actual.clear();
-                if(s.size()+j<=C){
-                    for(int k = 0; k<s.size(); k++)
-                        actual[grid[i][j+k]]++;
-                    if(mapEqual(actual, times_char))
-                        for(int k = 0; k<s.size(); k++)
-                            t[i][j+k].insert(iS);
-                }
-
-                actual.clear();
-                if(s.size()+j<=C && s.size()+i<=L){
-                    for(int k = 0; k<s.size(); k++)
-                        actual[grid[i+k][j+k]]++;
-                    if(mapEqual(actual, times_char))
-                        for(int k = 0; k<s.size(); k++)
-                            t[i+k][j+k].insert(iS);
-                }
-
-                actual.clear();
-                if(j-s.size()>=-1 && s.size()+i<=L){
-                    for(int k = 0; k<s.size(); k++)
-                        actual[grid[i+k][j-k]]++;
-                    if(mapEqual(actual, times_char))
-                        for(int k = 0; k<s.size(); k++)
-                            t[i+k][j-k].insert(iS);
-                }
-
-
-
-            }
-
-        iS++;
-
-    }
-
-
-    int ans = 0;
-    for(int i=0; i<L; i++)
-        for(int j=0; j<C; j++)
-            if(t[i][j].size()>1)
-                ans++;
-    cout<<ans<<"\n";
-}
-
+int sol[MAX][MAX];
 
 int main(){
-    ios_base::sync_with_stdio(0); cin.tie(0);
+    cin.tie(0);
+    ios_base::sync_with_stdio(0);
 
-    int t=1;
-    while(t--){
-        solve();
-    }
+    //lectura
+    cin>>N>>M;
+    for(int i = 0; i < N; i++)
+        for(int j = 0; j < M; j++)
+            cin>>mapa[i][j];
 
-    return 0;
+    //para visitar palabras
+    int color = 0;    
+
+    set<pair<int, int> >coord;
+
+    //queries
+    cin>>Q;
+    while (Q--){
+
+        color++;
+
+        string objetivo;
+        cin>>objetivo;
+        
+        vector<int>VISITADO(27, 0);            
+        for(int i = 0; i < objetivo.size(); i++)
+            VISITADO[objetivo[i] - 'A']++;        
+        
+        //iteramos el mapa                
+        for(int i = 0; i < N; i++){
+            for(int j = 0; j < M; j++){
+                
+                //arriba - abajo
+                if(N - i >= objetivo.size()){//checamos si cabe la cadena en el espacio restante
+                    bool posible = 1; //inicialmente es posible
+                    vector<int>visitado = VISITADO;
+                    for(int k = 0; k < objetivo.size(); k++){                                            
+                        visitado[mapa[i + k][j] - 'A'] --;
+                        if(visitado[mapa[i + k][j] - 'A'] < 0){
+                            posible = 0;
+                            break;
+                        }
+                    }
+                    if(posible){ //marcamos la aparicion de la palabra en la matriz de solucion
+                        for(int k = 0; k < objetivo.size(); k++){
+                            if(sol[i + k][j] == 0)
+                                sol[i + k][j] = color;                                
+                            else if(sol[i + k][j] != color)
+                                coord.insert({i + k, j});                            
+                        }
+                    }
+                }
+
+                //izquierda - derecha
+                if(M - j >= objetivo.size()){//checamos si cabe la cadena en el espacio restante
+                    bool posible = 1; //inicialmente es posible
+                    vector<int>visitado = VISITADO;
+                    for(int k = 0; k < objetivo.size(); k++){                                            
+                        visitado[mapa[i][j + k] - 'A'] --;
+                        if(visitado[mapa[i][j + k] - 'A'] < 0){
+                            posible = 0;
+                            break;
+                        }
+                    }
+                    if(posible){ //marcamos la aparicion de la palabra en la matriz de solucion
+                        for(int k = 0; k < objetivo.size(); k++){
+                            if(sol[i][j + k] == 0)
+                                sol[i][j + k] = color;                                
+                            else if(sol[i][j + k] != color)
+                                coord.insert({i, j + k});                                
+                        }
+                    }                    
+                }
+
+                //diagonal abajo-izquierda  
+                //checamos abajo y la izquieda
+                if(N - i >= objetivo.size() &&  j - objetivo.size() >= 0){//checamos si cabe la cadena en el espacio restante
+                    bool posible = 1; //inicialmente es posible
+                    vector<int>visitado = VISITADO;
+                    for(int k = 0; k < objetivo.size(); k++){
+                        visitado[mapa[i + k][j - k] - 'A'] --;
+                        if(visitado[mapa[i + k][j - k] - 'A'] < 0){
+                            posible = 0;
+                            break;
+                        }
+                    }
+                    if(posible){ //marcamos la aparicion de la palabra en la matriz de solucion
+                        for(int k = 0; k < objetivo.size(); k++){
+                            if(sol[i + k][j - k] == 0)
+                                sol[i + k][j - k] = color;                                
+                            else if(sol[i + k][j - k] != color)                                                                  
+                                coord.insert({i + k, j - k});
+                        }
+                    }
+                }
+
+
+                //diagonal abajo-derecha  
+                //checamos abajo y la derecha
+                if(N - i >= objetivo.size() &&  M - j >= objetivo.size()){//checamos si cabe la cadena en el espacio restante
+                    bool posible = 1; //inicialmente es posible
+                    vector<int>visitado = VISITADO;
+                    for(int k = 0; k < objetivo.size(); k++){
+                        visitado[mapa[i + k][j + k] - 'A'] --;
+                        if(visitado[mapa[i + k][j + k] - 'A'] < 0){
+                            posible = 0;
+                            break;
+                        }
+                    }
+                    if(posible){ //marcamos la aparicion de la palabra en la matriz de solucion
+                        for(int k = 0; k < objetivo.size(); k++){                            
+                            if(sol[i + k][j + k] == 0)
+                                sol[i + k][j + k] = color;
+                            else if(sol[i + k][j + k] != color)                            
+                                coord.insert({i + k, j + k});                                                            
+                        }
+                    }
+                }
+
+            }
+        }        
+    }    
+    cout<<coord.size()<<endl;    
 }
 
 /*
-4 4
-AZAB
-CBCB
-ACAA
-BZAA
-2
-BBCC
-BCZZ
-
-4 4
-AZAB
-CBCC
-ACAA
-BZAA
-2
-BBCC
-BCZZ
-
-4 4
-AAAA
-AAAA
-AAAA
-AAAA
-2
-AAAA
-AA
-
 4 5
 XBOIC
 DKIRA
 ALBOA
 BHGES
-4
+3
+BOI
 BOLA
 CASA
-BOI
-EO
 
-1 5
-ABCAA
+
+2 4
+AAAA
+AAAA
 2
-ABCAA
-A
+AAA
+BBB
 
-5 1
-A
-B
-C
-A
-A
+3 3
+AAB
+ABA
+BAA
 2
-AACBA
-ABC
-
-
-
+ABA
+BBB
 
 */
-
