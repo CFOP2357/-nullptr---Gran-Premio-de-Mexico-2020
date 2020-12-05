@@ -34,9 +34,15 @@ typedef vector<ull> vi;
 #define MAX 1000100
 #define MOD 1000000007
 
+vector<vector<ull>> adj;
+
 vector<ull> a;
 vector<ull> b;
-ull n;
+ull n, k;
+
+void pre(){
+
+}
 
 void solve(){
     a.clear(); b.clear();
@@ -46,13 +52,14 @@ void solve(){
         a.push_back(z);
     }
 
+
 }
 
 
 int main(){
     ios_base::sync_with_stdio(0); cin.tie(0);
 
-    int t; cin>>t;
+    int t=1;// cin>>t;
     while(t--){
         solve();
     }
