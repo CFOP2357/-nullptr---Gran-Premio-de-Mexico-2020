@@ -31,7 +31,7 @@ typedef long long ull;
 typedef pair<ull, ull> pii;
 typedef vector<ull> vi;
 
-#define MAX 1000100
+#define MAX 10000010
 #define MOD 1000000007
 
 vector<vector<ull>> adj;
@@ -40,18 +40,43 @@ vector<ull> a;
 vector<ull> b;
 ull n, k;
 
+
+const int N = 10000010;
+int lp[N+1];
+vector<int> pr;
+
 void pre(){
+    for (int i=2; i<=N; ++i) {
+      if (lp[i] == 0) {
+          lp[i] = i;
+          pr.push_back (i);
+      }
+      for (int j=0; j<(int)pr.size() && pr[j]<=lp[i] && i*pr[j]<=N; ++j)
+          lp[i * pr[j]] = pr[j];
+    }
+}
+
+set<ull> D;
+
+void getDiv(ull A){
+
+    ull d = A;
+    while(d>1){
+        D.insert(lp[d]);
+        d/=lp[d];
+    }
 
 }
 
 void solve(){
-    a.clear(); b.clear();
-    cin>>n;
-    for(int i=0; i<n; i++){
-        ull z; cin>>z;
-        a.push_back(z);
-    }
+    ull A, B;
+    cin>>A>>B;
 
+    D.clear();
+    getDiv(A);
+    getDiv(B);
+
+    cout<<D.size()<<"\n";
 
 }
 
@@ -61,7 +86,7 @@ int main(){
 
     pre();
 
-    int t=1;// cin>>t;
+    int t=1; cin>>t;
     while(t--){
         solve();
     }
